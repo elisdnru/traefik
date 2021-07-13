@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+    traefik:
+        image: traefik:2.4
+        command:
+            --providers.docker=true
+            --providers.docker.watch=true
+            --providers.docker.swarmmode=true
+            --providers.docker.exposedbydefault=false
+            --entrypoints.http.address=:80
+        ports:
+            - target: 80
+              published: 80
+              protocol: tcp
+              mode: host
+        networks:
+            - traefik-public
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        deploy:
+            labels:
+                - traefik.enable=true
+                - traefik.docker.network=traefik-public
+            placement:
+                constraints: [ node.role == manager ]
+
+networks:
+    traefik-public:
+        external: true
