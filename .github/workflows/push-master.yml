@@ -1,0 +1,26 @@
+name: Pipeline
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v2
+
+            -   name: Install SSH key
+                uses: shimataro/ssh-key-action@v2
+                with:
+                    key: ${{ secrets.SSH_KEY }}
+                    known_hosts: ${{ secrets.DEPLOY_HOST }}
+
+            -   name: Deploy
+                run: make deploy
+                env:
+                    HOST: ${{ secrets.DEPLOY_HOST }}
+                    PORT: ${{ secrets.DEPLOY_PORT }}
+                    BUILD_NUMBER: ${{ github.run_number }}
