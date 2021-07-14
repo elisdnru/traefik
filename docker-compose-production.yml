@@ -8,15 +8,25 @@ services:
             --providers.docker.swarmmode=true
             --providers.docker.exposedbydefault=false
             --entrypoints.http.address=:80
+            --entrypoints.https.address=:443
+            --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+            --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http
+            --certificatesresolvers.letsencrypt.acme.email=mail@elisdn.ru
+            --certificatesresolvers.letsencrypt.acme.storage=/certs/acme.json
         ports:
             - target: 80
               published: 80
+              protocol: tcp
+              mode: host
+            - target: 443
+              published: 443
               protocol: tcp
               mode: host
         networks:
             - traefik-public
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
+            - traefik-public-certs:/certs
         deploy:
             labels:
                 - traefik.enable=true
@@ -27,3 +37,6 @@ services:
 networks:
     traefik-public:
         external: true
+
+volumes:
+    traefik-public-certs:
