@@ -37,6 +37,10 @@ services:
                 - traefik.http.routers.http-catchall.middlewares=redirect-to-https
                 - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
                 - traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true
+                - traefik.http.middlewares.secure-headers.headers.sslRedirect=true
+                - traefik.http.middlewares.secure-headers.headers.stsSeconds=31536000
+                - traefik.http.middlewares.secure-headers.headers.contentSecurityPolicy=block-all-mixed-content
+
             placement:
                 constraints: [ node.role == manager ]
 
