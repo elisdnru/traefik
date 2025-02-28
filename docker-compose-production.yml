@@ -7,12 +7,12 @@ services:
             --providers.swarm.watch=true
             --providers.swarm.exposedByDefault=false
             --providers.swarm.endpoint=unix:///var/run/docker.sock
-            --entrypoints.http.address=:80
-            --entrypoints.https.address=:443
-            --certificatesresolvers.letsencrypt.acme.httpchallenge=true
-            --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http
-            --certificatesresolvers.letsencrypt.acme.email=mail@elisdn.ru
-            --certificatesresolvers.letsencrypt.acme.storage=/certs/acme.json
+            --entryPoints.http.address=:80
+            --entryPoints.https.address=:443
+            --certificatesResolvers.letsEncrypt.acme.httpChallenge=true
+            --certificatesResolvers.letsEncrypt.acme.httpChallenge.entrypoint=http
+            --certificatesResolvers.letsEncrypt.acme.email=mail@elisdn.ru
+            --certificatesResolvers.letsEncrypt.acme.storage=/certs/acme.json
         ports:
             - target: 80
               published: 80
@@ -31,12 +31,12 @@ services:
             labels:
                 - traefik.enable=true
                 - traefik.docker.network=traefik-public
-                - traefik.http.services.traefik.loadbalancer.server.port=80
+                - traefik.http.services.traefik.loadBalancer.server.port=80
                 - traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)
-                - traefik.http.routers.http-catchall.entrypoints=http
+                - traefik.http.routers.http-catchall.entryPoints=http
                 - traefik.http.routers.http-catchall.middlewares=redirect-to-https
-                - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
-                - traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true
+                - traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https
+                - traefik.http.middlewares.redirect-to-https.redirectScheme.permanent=true
                 - traefik.http.middlewares.secure-headers.headers.sslRedirect=true
                 - traefik.http.middlewares.secure-headers.headers.stsSeconds=31536000
                 - traefik.http.middlewares.secure-headers.headers.contentSecurityPolicy=block-all-mixed-content
