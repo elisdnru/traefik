@@ -20,12 +20,15 @@ jobs:
             -   name: Install SSH key
                 uses: shimataro/ssh-key-action@v2
                 with:
-                    key: ${{ secrets.SSH_KEY }}
-                    known_hosts: ${{ secrets.DEPLOY_HOST }}
+                    key: ${{ secrets.DEPLOY_SSH_KEY }}
+                    known_hosts: placeholder
+
+            -   name: Put SSH known host
+                run: |
+                    ssh-keyscan -p ${{ secrets.DEPLOY_PORT }} -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
 
             -   name: Deploy
                 run: make deploy
                 env:
                     HOST: ${{ secrets.DEPLOY_HOST }}
                     PORT: ${{ secrets.DEPLOY_PORT }}
-                    BUILD_NUMBER: ${{ github.run_number }}
